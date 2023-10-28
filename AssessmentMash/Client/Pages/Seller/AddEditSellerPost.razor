@@ -1,0 +1,72 @@
+﻿@page "/sellerpost/add"
+@page "/sellerpost/edit/{buyerID:int}"
+@inherits AddEditSellerPostBase
+
+
+<h1>@Title1 Seller post</h1>
+<hr />
+
+<EditForm Model="@buyer" OnValidSubmit="SaveBuyerPost">
+    <DataAnnotationsValidator />
+    <div class="mb-3">
+        <label for="Title" class="form-label">Title</label>
+        <div class="col-md-4">
+            <InputText class="form-control" @bind-Value="buyer.Title" />
+        </div>
+        <ValidationMessage For="@(() => buyer.Title)" />
+    </div>
+
+
+    <div class="mb-3">
+        <label for="GBRanking" class="form-label">GSRanking</label>
+        <div class="col-md-4">
+            <InputSelect class="form-control" @bind-Value="buyer.GSRanking">
+                <option value="">-- Select Ranking --</option>
+                <option value="Male">First</option>
+                <option value="Female">Secound</option>
+                <option value="Female">Third</option>
+            </InputSelect>
+        </div>
+        <ValidationMessage For="@(() => buyer.GSRanking)" />
+    </div>
+
+
+
+    <div class="mb-3">
+        <label for="Description" class="form-label">Description</label>
+        <div class="col-md-4">
+            <InputText class="form-control" @bind-Value="buyer.Description" />
+        </div>
+        <ValidationMessage For="@(() => buyer.Description)" />
+    </div>
+
+    +
+    <div class="mb-3">
+        <label for="CreatedByUserId" class="form-label">CreatedByUser</label>
+        <div class="col-md-4">
+            <InputSelect class="form-control" @bind-Value="buyer.CreatedByUserId">
+                <option value="-- Select City --">-- Select CreatedByUserId --</option>
+                @foreach (var user in userList)
+                {
+                    <option value="@user.Name">@user.Name</option>
+                }
+            </InputSelect>
+        </div>
+        <ValidationMessage For="@(() => buyer.CreatedByUserId)" />
+    </div>
+    <div class="mb-3">
+        <label for="PostedDate" class="form-label">PostedDate</label>
+        <div class="col-md-4">
+            <InputDate class="form-control" @bind-Value="buyer.PostedDate" />
+        </div>
+        <ValidationMessage For="@(() => buyer.PostedDate)" />
+    </div>
+
+
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Save</button>
+        <button class="btn btn-light" @onclick="Cancel">Cancel</button>
+    </div>
+
+</EditForm>

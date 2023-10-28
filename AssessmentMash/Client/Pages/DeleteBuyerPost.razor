@@ -1,0 +1,81 @@
+﻿@page "/BuyerPost/delete/{BuyerPostId}"
+@using AssessmentMash.Shared.Models;
+@using static System.Net.WebRequestMethods;
+@inject IJSRuntime JSRuntime
+
+<h1>Delete BuyerPost</h1>
+
+@if (buyer != null)
+{
+    <p>Are you sure you want to delete this BuyerPost?</p>
+    <table class="table">
+        <tr>
+            <th>Title</th>
+            <td>@buyer.Title</td>
+        </tr>
+        <tr>
+            <th>Description</th>
+            <td>@buyer.Description</td>
+        </tr>
+        <tr>
+            <th>CreatedByUserId</th>
+            <td>@buyer.CreatedByUserId</td>
+        </tr>
+        <tr>
+            <th>PostedDate</th>
+            <td>@buyer.PostedDate</td>
+        </tr>
+        <tr>
+            <th>GBRanking</th>
+            <td>@buyer.GBRanking</td>
+        </tr>
+    </table>
+    <button class="btn btn-danger" @onclick="() => DeleteBuyerPostConfirm(buyer.BuyerPostId)">Delete</button>
+    <a href="/fetchbuyerpost" class="btn btn-secondary">Cancel</a>
+}
+else
+{
+    <p>BuyerPost not found.</p>
+}
+
+@code {
+    [Inject]
+    HttpClient Http { get; set; }
+    [Inject]
+    public NavigationManager NavigationManager { get; set; }
+
+
+    protected List<BuyerPost> buyerList = new();
+    protected List<BuyerPost> searchBuyerData = new();
+    protected BuyerPost buyer = new();
+    protected string SearchString { get; set; } = string.Empty;
+
+    [Parameter]
+    public string BuyerPostId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetBuyerPost(int.Parse(BuyerPostId));
+    }
+
+    protected async Task GetBuyerPost(int buyerID)
+    {
+        var response = await Http.GetFromJsonAsync<BuyerPost>($"api/BuyerPost/{buyerID}");
+        if (response != null)
+        {
+            buyer = response;
+        }
+    }
+
+    protected async void DeleteBuyerPostConfirm(int buyerID)
+    {
+        await Http.DeleteAsync($"api/BuyerPost/{buyerID}");
+        // Optionally, you can add a redirection here or other logic after the deletion.
+        NavigationManager.NavigateTo("/fetchbuyerpost");
+    }
+
+
+   
+
+    
+}
